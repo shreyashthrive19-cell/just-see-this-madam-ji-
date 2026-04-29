@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, Vanshu 💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --rose: #e8557a; --rose-light: #f9c8d6; --rose-dark: #c0395c;
+    --peach: #f4a4b0; --cream: #fff8f9; --lavender: #e8d5f5;
+    --gold: #d4a017; --text-dark: #3d1a2e; --text-mid: #6b3050; --white: #ffffff;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Lato', sans-serif; background: var(--cream); color: var(--text-dark); overflow-x: hidden; }
+
+  /* ===== FLOATING HEARTS ===== */
+  .heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+  .floating-heart { position: absolute; font-size: 20px; opacity: 0; animation: floatUp 8s ease-in infinite; }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translateY(100vh) rotate(0deg) scale(0.5); }
+    10% { opacity: 0.6; } 90% { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(-10vh) rotate(360deg) scale(1.2); }
+  }
+
+  /* ===== PAGE 1 ===== */
+  #page1 { min-height: 100vh; background: linear-gradient(135deg, #fff0f5 0%, #ffe8f0 30%, #fce4ec 60%, #f8d7e8 100%); position: relative; overflow: hidden; }
+
+  .page1-header { position: relative; z-index: 2; text-align: center; padding: 40px 20px 20px; }
+  .sorry-badge { display: inline-block; background: linear-gradient(135deg, var(--rose), var(--rose-dark)); color: white; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; padding: 8px 24px; border-radius: 50px; margin-bottom: 20px; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(232,85,122,0.4); } 50% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(232,85,122,0); } }
+  .main-title { font-family: 'Playfair Display', serif; font-size: clamp(36px,7vw,72px); font-style: italic; color: var(--rose-dark); line-height: 1.1; margin-bottom: 8px; animation: fadeSlideDown 1s ease both; }
+  .main-subtitle { font-size: 16px; color: var(--text-mid); letter-spacing: 1px; animation: fadeSlideDown 1.3s ease both; }
+  @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== PHOTO GRID ===== */
+  .photo-section { position: relative; z-index: 2; max-width: 920px; margin: 30px auto; padding: 0 20px; }
+  .photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 160px; gap: 10px; }
+  .photo-frame { position: relative; overflow: hidden; border-radius: 16px; cursor: pointer; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 8px 30px rgba(232,85,122,0.2); animation: fadeInScale 0.8s ease both; }
+  .photo-frame:nth-child(1) { grid-column: 1/3; grid-row: 1/3; animation-delay: 0.1s; border-radius: 24px; }
+  .photo-frame:nth-child(2) { animation-delay: 0.2s; }
+  .photo-frame:nth-child(3) { animation-delay: 0.3s; }
+  .photo-frame:nth-child(4) { animation-delay: 0.4s; }
+  .photo-frame:nth-child(5) { animation-delay: 0.5s; }
+  .photo-frame:nth-child(6) { animation-delay: 0.55s; }
+  .photo-frame:nth-child(7) { animation-delay: 0.6s; }
+  .photo-frame:nth-child(8) { grid-column: 4; grid-row: 1/3; animation-delay: 0.65s; border-radius: 16px 24px 24px 16px; }
+  @keyframes fadeInScale { from { opacity: 0; transform: scale(0.8) rotate(-2deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+  .photo-frame:hover { transform: scale(1.04) rotate(0.5deg); }
+  .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(192,57,92,0.35) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; border-radius: inherit; }
+  .photo-frame:hover .photo-overlay { opacity: 1; }
+
+  /* ===== INSTAGRAM REEL STYLE VIDEO ===== */
+  .reel-section { position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 24px; margin: 40px auto; padding: 0 20px; max-width: 900px; flex-wrap: wrap; }
+  .reel-label { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--rose-dark); text-align: center; margin-bottom: 10px; }
+  .reel-wrapper { position: relative; width: 220px; height: 390px; border-radius: 28px; overflow: hidden; box-shadow: 0 20px 60px rgba(192,57,92,0.35); background: #1a0010; flex-shrink: 0; }
+  .reel-vid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; border-radius: 28px; }
+  .reel-vid.reel-active { opacity: 1; }
+  .reel-overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 14px 16px; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%); z-index: 3; pointer-events: none; }
+  .reel-overlay .reel-hearts { font-size: 22px; letter-spacing: 3px; }
+  .reel-dots { display: flex; gap: 6px; justify-content: center; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); z-index: 4; }
+  .reel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--rose-light); cursor: pointer; transition: all 0.3s; }
+  .reel-dot.active { background: var(--rose-dark); transform: scale(1.3); }
+  .reel-controls { display: none; }
+  .reel-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 20; background: rgba(255,255,255,0.88); border: none; color: var(--rose-dark); width: 38px; height: 38px; border-radius: 50%; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); transition: all 0.3s; padding: 0; }
+  .reel-nav-btn:hover { background: var(--rose-dark); color: white; transform: translateY(-50%) scale(1.1); }
+  .reel-btn-prev { left: 8px; }
+  .reel-btn-next { right: 8px; }
+
+  /* ===== FLIP CARDS ===== */
+  .flip-section { position: relative; z-index: 2; max-width: 900px; margin: 50px auto; padding: 0 20px; text-align: center; }
+  .flip-section-label { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--rose-dark); margin-bottom: 8px; }
+  .flip-section-hint { font-size: 13px; color: var(--text-mid); margin-bottom: 30px; letter-spacing: 1px; }
+  .flip-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .flip-card { width: 180px; height: 220px; perspective: 1000px; cursor: pointer; }
+  .flip-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4,0,0.2,1); border-radius: 20px; }
+  .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+  .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px; text-align: center; }
+  .flip-card-front { background: linear-gradient(135deg, #fff, #ffe0eb); border: 2px solid var(--rose-light); box-shadow: 0 8px 30px rgba(232,85,122,0.15); }
+  .flip-card-back { background: linear-gradient(135deg, var(--rose), var(--rose-dark)); transform: rotateY(180deg); color: white; box-shadow: 0 8px 30px rgba(192,57,92,0.35); }
+  .flip-emoji { font-size: 42px; animation: wiggle 2s ease-in-out infinite; }
+  @keyframes wiggle { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+  .flip-card.flipped .flip-emoji { animation: none; }
+  .flip-front-text { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--rose-dark); font-weight: 700; }
+  .flip-front-hint { font-size: 11px; color: var(--text-mid); letter-spacing: 1px; text-transform: uppercase; }
+  .flip-back-message { font-family: 'Playfair Display', serif; font-size: 15px; line-height: 1.5; font-style: italic; }
+  .flip-back-emoji { font-size: 28px; }
+
+  /* Confetti */
+  .confetti-piece { position: fixed; width: 8px; height: 8px; border-radius: 50%; pointer-events: none; z-index: 999; animation: confettiFall 1.5s ease-out forwards; }
+  @keyframes confettiFall { 0% { opacity: 1; transform: translate(0,0) rotate(0deg); } 100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(720deg); } }
+
+  /* ===== SCROLL REVEAL ===== */
+  .scroll-reveal { position: relative; z-index: 2; max-width: 700px; margin: 50px auto; padding: 0 20px; text-align: center; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+  .apology-quote { font-family: 'Playfair Display', serif; font-size: clamp(20px,4vw,32px); font-style: italic; color: var(--rose-dark); line-height: 1.6; padding: 30px; background: white; border-radius: 24px; border-left: 5px solid var(--rose); box-shadow: 0 10px 40px rgba(232,85,122,0.12); margin-bottom: 30px; }
+
+  /* ===== SCROLL DOWN ARROW ===== */
+  .scroll-hint { position: relative; z-index: 2; text-align: center; padding: 10px 0 30px; }
+  .scroll-arrow { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; color: var(--rose-dark); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; animation: arrowBounce 1.5s ease-in-out infinite; }
+  .scroll-arrow svg { width: 32px; height: 32px; }
+  @keyframes arrowBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+  /* ===== NEXT BUTTON ===== */
+  .next-btn-wrap { position: relative; z-index: 2; text-align: center; padding: 20px 20px 60px; }
+  .next-btn { display: inline-block; background: linear-gradient(135deg, var(--rose), var(--rose-dark)); color: white; font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; padding: 18px 48px; border-radius: 50px; cursor: pointer; border: none; box-shadow: 0 12px 40px rgba(192,57,92,0.35); transition: transform 0.3s, box-shadow 0.3s; animation: bounceIn 1s 1s ease both; position: relative; overflow: hidden; }
+  .next-btn::before { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.15); transform: translateX(-100%); transition: transform 0.4s; }
+  .next-btn:hover::before { transform: translateX(0); }
+  .next-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 20px 50px rgba(192,57,92,0.45); }
+  .next-btn:active { transform: scale(0.97); }
+  @keyframes bounceIn { from { opacity: 0; transform: scale(0.6); } 60% { transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+  .btn-sub { font-size: 12px; color: var(--text-mid); margin-top: 12px; letter-spacing: 1px; }
+
+  /* ===== PAGE 2 ===== */
+  #page2 { display: none; min-height: 100vh; background: linear-gradient(135deg, #fff0f5, #fce4ec, #f8d7e8); padding: 0 20px 60px; animation: page2In 0.6s ease both; }
+  @keyframes page2In { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+  #page2.visible { display: block !important; }
+
+  /* Back button */
+  .back-btn { position: fixed; top: 20px; left: 20px; z-index: 50; background: white; border: 2px solid var(--rose-light); color: var(--rose-dark); font-family: 'Lato', sans-serif; font-size: 14px; font-weight: 700; padding: 10px 20px; border-radius: 50px; cursor: pointer; display: none; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(192,57,92,0.2); transition: all 0.3s; }
+  .back-btn:hover { background: var(--rose); color: white; transform: translateX(-4px); }
+  .back-btn.visible { display: flex; }
+
+  .page2-header { text-align: center; padding: 60px 20px 30px; }
+  .page2-title { font-family: 'Playfair Display', serif; font-size: clamp(28px,5vw,52px); color: var(--rose-dark); margin-bottom: 8px; }
+  .page2-sub { font-size: 15px; color: var(--text-mid); }
+
+  /* ===== VIDEO PLAYER PAGE 2 ===== */
+  .video-section { max-width: 500px; margin: 0 auto 30px; padding: 0 10px; }
+  .video-player-wrap { position: relative; border-radius: 28px; overflow: hidden; box-shadow: 0 24px 70px rgba(192,57,92,0.3); background: #1a0010; aspect-ratio: 9/16; max-height: 520px; }
+  .video-player-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); cursor: pointer; transition: opacity 0.3s; }
+  .video-play-overlay:hover { background: rgba(0,0,0,0.15); }
+  .play-btn-circle { width: 70px; height: 70px; background: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+  .play-btn-circle svg { width: 30px; height: 30px; fill: var(--rose-dark); margin-left: 4px; }
+  .video-play-overlay.hidden { opacity: 0; pointer-events: none; }
+  .video-controls-bar { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 14px; }
+  .vid-ctrl-btn { background: white; border: 2px solid var(--rose-light); color: var(--rose-dark); width: 46px; height: 46px; border-radius: 50%; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(192,57,92,0.18); transition: all 0.3s; }
+  .vid-ctrl-btn:hover { background: var(--rose); color: white; transform: scale(1.1); }
+
+  /* ===== READ BUTTON + SCROLL ===== */
+  .read-btn-wrap { text-align: center; margin: 20px auto 0; }
+  .read-btn { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, var(--rose), var(--rose-dark)); color: white; font-family: 'Playfair Display', serif; font-size: 17px; font-style: italic; padding: 15px 38px; border-radius: 50px; cursor: pointer; border: none; box-shadow: 0 10px 36px rgba(192,57,92,0.35); transition: transform 0.3s, box-shadow 0.3s; }
+  .read-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 44px rgba(192,57,92,0.45); }
+
+  /* ===== ANIMATED SCROLL (papyrus) ===== */
+  .scroll-container { max-width: 620px; margin: 0 auto; overflow: hidden; max-height: 0; transition: max-height 1.2s cubic-bezier(0.4,0,0.2,1); }
+  .scroll-container.open { max-height: 2000px; }
+  .scroll-paper { background: linear-gradient(180deg, #fff8f0 0%, #fef3e2 30%, #fef9f0 70%, #fff8f0 100%); border: 3px solid #d4a017; border-radius: 12px; padding: 0; margin: 20px 10px 40px; position: relative; box-shadow: 0 20px 60px rgba(212,160,23,0.2), inset 0 0 40px rgba(212,160,23,0.05); overflow: hidden; }
+  .scroll-roller { height: 36px; background: linear-gradient(90deg, #a07820, #d4a017, #f0c040, #d4a017, #a07820); border-radius: 8px; width: calc(100% + 24px); margin-left: -12px; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .scroll-roller::before { content: ''; position: absolute; inset: 8px 0; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .scroll-inner { padding: 24px 32px 30px; }
+  .scroll-inner p { font-family: 'Playfair Display', serif; font-size: 16px; line-height: 1.9; color: #3d2a10; margin-bottom: 14px; }
+  .scroll-inner .scroll-sig { text-align: right; font-style: italic; color: var(--rose-dark); font-size: 17px; margin-top: 20px; }
+  .scroll-line { height: 1px; background: linear-gradient(90deg, transparent, #d4a017, transparent); margin: 16px 0; }
+
+  /* ===== LETTER SECTION (still available if needed) ===== */
+  .letter-section { max-width: 680px; margin: 50px auto 0; padding: 0 20px; }
+  .letter-card { background: white; border-radius: 24px; padding: 48px; box-shadow: 0 16px 60px rgba(232,85,122,0.15); position: relative; overflow: hidden; opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s; }
+  .letter-card.visible { opacity: 1; transform: translateY(0); }
+  .letter-card::before { content: '❤'; position: absolute; top: -20px; right: -20px; font-size: 200px; opacity: 0.04; color: var(--rose); }
+  .letter-header { text-align: center; margin-bottom: 32px; }
+  .letter-to { font-family: 'Playfair Display', serif; font-size: 13px; color: var(--rose); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .letter-name { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--rose-dark); font-style: italic; }
+  .letter-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+  .letter-divider::before, .letter-divider::after { content: ''; flex: 1; height: 1px; }
+  .letter-divider::before { background: linear-gradient(to right, transparent, var(--rose-light)); }
+  .letter-divider::after { background: linear-gradient(to left, transparent, var(--rose-light)); }
+  .letter-body { font-size: 17px; line-height: 1.9; color: var(--text-dark); }
+  .letter-body p { margin-bottom: 18px; }
+  .highlight { color: var(--rose-dark); font-weight: 700; }
+  .italic { font-style: italic; color: var(--text-mid); }
+  .letter-sign { text-align: right; margin-top: 32px; }
+  .letter-sign-from { font-size: 13px; color: var(--text-mid); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .letter-sign-name { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--rose-dark); font-style: italic; }
+
+
+  /* ===== 16:9 SLIDESHOW (Page 2) ===== */
+  .slideshow-wrap { position: relative; max-width: 760px; margin: 0 auto 24px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(192,57,92,0.25); background: #1a0010; aspect-ratio: 16/9; }
+  .slideshow-track { width: 100%; height: 100%; position: relative; }
+  .slide-item { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
+  .slide-item.slide-active { opacity: 1; }
+  .slide-item img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 20px; }
+  .slide-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; background: rgba(255,255,255,0.88); border: none; color: var(--rose-dark); font-size: 36px; width: 50px; height: 50px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transition: all 0.3s; line-height: 1; }
+  .slide-arrow:hover { background: var(--rose); color: white; transform: translateY(-50%) scale(1.12); }
+  .slide-prev { left: 14px; }
+  .slide-next { right: 14px; }
+  .slide-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10; }
+  .slide-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; transition: all 0.3s; border: none; }
+  .slide-dot.active { background: white; transform: scale(1.3); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .photo-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 130px; }
+    .photo-frame:nth-child(1) { grid-column: 1/3; grid-row: 1/3; border-radius: 20px; }
+    .photo-frame:nth-child(8) { grid-column: auto; grid-row: auto; border-radius: 16px; }
+    .flip-card { width: 150px; height: 190px; }
+    .reel-wrapper { width: 180px; height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="heart-bg" id="heartBg"></div>
+
+<!-- Back button (shown on page 2) -->
+<button class="back-btn" id="backBtn" onclick="goBack()">
+  &#8592; Back
+</button>
+
+<!-- ===== PAGE 1 ===== -->
+<div id="page1">
+
+  <div class="page1-header">
+    <div class="sorry-badge">A message from the heart 💕</div>
+    <h1 class="main-title">I'm so sorry, my love.</h1>
+    <p class="main-subtitle">Every moment with you is precious — please forgive me</p>
+  </div>
+
+  <!-- Photos Section -->
+  <div class="photo-section">
+    <div class="photo-grid">
+      <div class="photo-frame" onclick="sparkle(this)"><img src="media/img-01.jpg" alt="memory 1"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-02.jpg" alt="memory 2"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-03.jpg" alt="memory 3"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-04.jpg" alt="memory 4"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-05.jpg" alt="memory 5"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-06.jpg" alt="memory 6"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-07.jpg" alt="memory 7"><div class="photo-overlay"></div></div><div class="photo-frame" onclick="sparkle(this)"><img src="media/img-08.jpg" alt="memory 8"><div class="photo-overlay"></div></div>
+    </div>
+  </div>
+
+  <!-- Instagram Reel Style Videos -->
+  <div style="position:relative;z-index:2;text-align:center;margin:50px auto 20px;">
+    <p style="font-family:'Playfair Display',serif;font-size:20px;color:var(--rose-dark);margin-bottom:6px;">Our Funny Moments 🎬</p>
+    <p style="font-size:13px;color:var(--text-mid);letter-spacing:1px;margin-bottom:24px;">swipe through our memories ✨</p>
+    <div class="reel-section">
+            <div style="position:relative;">
+        <div class="reel-wrapper" id="reelWrapper">
+          <video class="reel-vid reel-active" data-idx="0" src="media/vid-01.mp4" loop playsinline muted autoplay></video>
+          <video class="reel-vid" data-idx="1" src="media/vid-02.mp4" loop playsinline muted autoplay></video>
+          <video class="reel-vid" data-idx="2" src="media/vid-03.mp4" loop playsinline muted autoplay></video>
+          <video class="reel-vid" data-idx="3" src="media/vid-04.mp4" loop playsinline muted autoplay></video>
+          <video class="reel-vid" data-idx="4" src="media/vid-05.mp4" loop playsinline muted autoplay></video>
+          <video class="reel-vid" data-idx="5" src="media/vid-06.mp4" loop playsinline muted autoplay></video>
+          <video class="reel-vid" data-idx="6" src="media/vid-07.mp4" loop playsinline muted autoplay></video>
+          <div class="reel-overlay"><div class="reel-hearts">💕 ❤️ 💗</div></div>
+          <div id="reelTapOverlay" style="display:none;position:absolute;inset:0;z-index:5;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;flex-direction:column;gap:10px;cursor:pointer;border-radius:28px;" onclick="document.getElementById('reelTapOverlay').style.display='none';reelVids[reelIdx].muted=true;reelVids[reelIdx].play();">
+            <div style="width:60px;height:60px;background:rgba(255,255,255,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;">▶</div>
+            <div style="color:white;font-size:13px;letter-spacing:1px;">Tap to play</div>
+          </div>
+          <button class="reel-nav-btn reel-btn-prev" onclick="reelPrev()" aria-label="Previous video">&#8249;</button>
+          <button class="reel-nav-btn reel-btn-next" onclick="reelNext()" aria-label="Next video">&#8250;</button>
+        </div>
+        <div class="reel-dots" id="reelDots" style="bottom:-28px;"></div>
+      </div>
+      
+    </div>
+    <p style="font-family:'Lato',sans-serif;font-size:13px;color:var(--text-mid);letter-spacing:1px;margin-top:36px;">
+      <span style="color:var(--rose-dark);font-weight:700;">&#8249;</span> tap the arrows to see the previous &amp; next video <span style="color:var(--rose-dark);font-weight:700;">&#8250;</span>
+    </p>
+  </div>
+
+  <!-- Flip Cards -->
+  <div class="flip-section" style="margin-top:60px;">
+    <p class="flip-section-label">Tap the cards, my love</p>
+    <p class="flip-section-hint">Each one holds a promise from my heart 💌</p>
+    <div class="flip-buttons">
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-emoji">❤️</div><div class="flip-front-text">I Love You</div><div class="flip-front-hint">tap to reveal</div></div>
+          <div class="flip-card-back"><div class="flip-back-emoji">💗</div><div class="flip-back-message">More than words can say, more than you'll ever know.</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-emoji">🙏</div><div class="flip-front-text">I'm Sorry</div><div class="flip-front-hint">tap to reveal</div></div>
+          <div class="flip-card-back"><div class="flip-back-emoji">💌</div><div class="flip-back-message">From the bottom of my heart — I am truly sorry.</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-emoji">🌹</div><div class="flip-front-text">I Promise</div><div class="flip-front-hint">tap to reveal</div></div>
+          <div class="flip-card-back"><div class="flip-back-emoji">💍</div><div class="flip-back-message">I promise to do better, every single day.</div></div>
+        </div>
+      </div>
+      <div class="flip-card" onclick="flipCard(this)">
+        <div class="flip-card-inner">
+          <div class="flip-card-front"><div class="flip-emoji">✨</div><div class="flip-front-text">Always Yours</div><div class="flip-front-hint">tap to reveal</div></div>
+          <div class="flip-card-back"><div class="flip-back-emoji">🌙</div><div class="flip-back-message">Yesterday, today, forever — always and only yours.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll reveal quote -->
+  <div class="scroll-reveal visible" id="revealText">
+    <div class="apology-quote">"I never meant to hurt you. You are the most beautiful, precious thing in my life — and I would choose you again, and again, in every lifetime."</div>
+  </div>
+
+  <!-- Scroll down hint -->
+  <div class="scroll-hint">
+    <div class="scroll-arrow" onclick="document.getElementById('nextBtnWrap').scrollIntoView({behavior:'smooth'})">
+      <span>scroll down</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <!-- Next Page Button -->
+  <div class="next-btn-wrap" id="nextBtnWrap" style="opacity:1;transform:none;">
+    <button class="next-btn" onclick="goToPage2()">Continue — there's more 💕</button>
+    <p class="btn-sub">A special message awaits you on the next page ✨</p>
+  </div>
+
+</div>
+
+<!-- ===== PAGE 2 ===== -->
+<div id="page2">
+  <div class="page2-header">
+    <div class="sorry-badge">Something Special For You 💝</div>
+    <h2 class="page2-title">Watch & Read, Vanshu</h2>
+    <p class="page2-sub">A little something from my heart 💌</p>
+  </div>
+
+  <!-- Video Player -->
+  <div class="video-section">
+    <!-- 16:9 Slideshow -->
+    <div class="slideshow-wrap">
+      <div class="slideshow-track" id="slideshowTrack">
+        
+        <div class="slide-item slide-active" data-slide="0"><img src="media/img-09.png" alt="slide 1"></div>
+        <div class="slide-item" data-slide="1"><img src="media/img-10.png" alt="slide 2"></div>
+        <div class="slide-item" data-slide="2"><img src="media/img-11.png" alt="slide 3"></div>
+        <div class="slide-item" data-slide="3"><img src="media/img-12.png" alt="slide 4"></div>
+        <div class="slide-item" data-slide="4"><img src="media/img-13.png" alt="slide 5"></div>
+      </div>
+      <!-- Arrows -->
+      <button class="slide-arrow slide-prev" onclick="slidePrev()">&#8249;</button>
+      <button class="slide-arrow slide-next" onclick="slideNext()">&#8250;</button>
+      <!-- Dots -->
+      <div class="slide-dots" id="slideDots"></div>
+    </div>
+  </div>
+
+    <!-- Read Button -->
+  <div class="read-btn-wrap">
+    <button class="read-btn" onclick="openScroll()">📜 Read my message</button>
+  </div>
+
+  <!-- Animated Scroll -->
+  <div class="scroll-container" id="scrollContainer">
+    <div class="scroll-paper">
+      <div class="scroll-roller"></div>
+      <div class="scroll-inner">
+        <p>Hi Vanshu,</p>
+        <div class="scroll-line"></div>
+        <p>Bas kuch cheezein calmly bolni thi. Lagta hai hum dono hi aise phase me the jahan cheezein properly handle nahi ho paayi. Shayad tum apni side se overwhelmed thi aur main apni side se utna clearly express nahi kar paaya jitna mujhe karna chahiye tha.</p>
+        <p>Main tumse milna isliye chahata tha kyunki mujhe chats pe apni feelings achhe se express karna thoda difficult lagta hai. Mujhe laga milke calmly baat karenge toh hum ek dusre ko better samajh paayenge.</p>
+        <p>Aur jab tumne bola tha ki tumhe space chahiye, toh maine socha shayad tumhe sach me zarurat hai. Isliye main thoda kam message karne laga, kyunki mujhe laga ki shayad meri wajah se tum irritate ho rahi ho ya tumhe thoda time chahiye apne liye.</p>
+        <p>Mujhe pata hai tum apne phase me thodi overwhelmed thi, aur agar us time tum kisi se milna nahi chahti thi toh that's totally okay. Main bas yahi try kar raha tha ki hum milke calmly baat kar lein aur situation samajh lein.</p>
+        <p>Main maanta hoon ki mere efforts tumhe shayad kam lage hon, but meri intention kabhi pressure dene ki nahi thi. Bas yahi tha ki hum baith ke normal tareeke se baat karein, na ki chats pe misunderstand ho.</p>
+        <p>Agar maine tumhe kahi bhi hurt kiya ho ya uncomfortable feel karaya ho, I'm really sorry for that. That was never my intention.</p>
+        <div class="scroll-line"></div>
+        <p class="scroll-sig">Your Shru... 💕</p>
+      </div>
+      <div class="scroll-roller"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// === Floating Hearts ===
+const heartBg = document.getElementById('heartBg');
+const heartEmojis = ['💕','❤️','💗','💓','💖','🌹','✨','💫'];
+for (let i = 0; i < 25; i++) {
+  const h = document.createElement('div');
+  h.className = 'floating-heart';
+  h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+  h.style.left = Math.random() * 100 + 'vw';
+  h.style.animationDelay = Math.random() * 8 + 's';
+  h.style.animationDuration = (6 + Math.random() * 6) + 's';
+  h.style.fontSize = (14 + Math.random() * 18) + 'px';
+  heartBg.appendChild(h);
+}
+
+// === Flip Cards ===
+function flipCard(card) {
+  card.classList.toggle('flipped');
+  if (card.classList.contains('flipped')) launchConfetti(card);
+}
+function launchConfetti(el) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+  const colors = ['#e8557a','#f4a4b0','#d4a017','#e8d5f5','#ff8fab'];
+  for (let i = 0; i < 18; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    const angle = (Math.PI * 2 * i) / 18, dist = 60 + Math.random() * 80;
+    piece.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+    piece.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+    piece.style.left = cx + 'px'; piece.style.top = cy + 'px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 1600);
+  }
+}
+function sparkle(el) {
+  el.style.transform = 'scale(1.06) rotate(2deg)';
+  setTimeout(() => { el.style.transform = ''; }, 300);
+}
+
+// === Scroll reveal ===
+const revealEls = document.querySelectorAll('.scroll-reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.2 });
+revealEls.forEach(el => observer.observe(el));
+
+// === Page Navigation ===
+function goToPage2() {
+  document.getElementById('page1').style.display = 'none';
+  const p2 = document.getElementById('page2');
+  p2.style.display = 'block';
+  p2.classList.add('visible');
+  const bb = document.getElementById('backBtn');
+  if (bb) { bb.style.display = 'flex'; }
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function goBack() {
+  document.getElementById('page2').classList.remove('visible');
+  document.getElementById('page2').style.display = '';
+  document.getElementById('page1').style.display = '';
+  document.getElementById('backBtn').classList.remove('visible');
+  // pause main video
+  const mv = document.getElementById('mainVideo');
+  if (mv) { mv.pause(); }
+  window.scrollTo(0, 0);
+}
+
+// === Instagram Reel ===
+const reelVids = document.querySelectorAll('.reel-vid');
+let reelIdx = 0;
+let reelPlaying = false;
+const dotsContainer = document.getElementById('reelDots');
+
+function initReel() {
+  reelVids.forEach((v, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'reel-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goReel(i);
+    dotsContainer.appendChild(dot);
+    v.muted = true;
+    v.loop = true;
+    v.setAttribute('playsinline', '');
+    v.setAttribute('muted', '');
+  });
+  // Try playing immediately
+  playCurrentReel();
+}
+
+function playCurrentReel() {
+  const vid = reelVids[reelIdx];
+  vid.muted = true;
+  vid.currentTime = 0;
+  const promise = vid.play();
+  if (promise !== undefined) {
+    promise.then(() => {
+      reelPlaying = true;
+      const ov = document.getElementById('reelTapOverlay');
+      if (ov) ov.style.display = 'none';
+    }).catch(() => {
+      const ov = document.getElementById('reelTapOverlay');
+      if (ov) ov.style.display = 'flex';
+    });
+  }
+}
+
+function goReel(idx) {
+  reelVids[reelIdx].classList.remove('reel-active');
+  reelVids[reelIdx].pause();
+  if (dotsContainer.children[reelIdx]) dotsContainer.children[reelIdx].classList.remove('active');
+  reelIdx = (idx + reelVids.length) % reelVids.length;
+  reelVids[reelIdx].classList.add('reel-active');
+  reelVids[reelIdx].muted = true;
+  if (dotsContainer.children[reelIdx]) dotsContainer.children[reelIdx].classList.add('active');
+  playCurrentReel();
+}
+function reelNext() { goReel(reelIdx + 1); }
+function reelPrev() { goReel(reelIdx - 1); }
+
+// Init on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initReel);
+} else {
+  initReel();
+}
+// Retry on load
+window.addEventListener('load', playCurrentReel);
+// Retry on first user tap
+document.addEventListener('touchstart', function onFirstTouch() {
+  playCurrentReel();
+  document.removeEventListener('touchstart', onFirstTouch);
+}, { once: true, passive: true });
+document.addEventListener('click', function onFirstClick() {
+  if (!reelPlaying) playCurrentReel();
+  document.removeEventListener('click', onFirstClick);
+}, { once: true });
+
+// Touch swipe for reel
+let touchStartX = 0;
+const rw = document.getElementById('reelWrapper');
+rw.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+rw.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 40) { dx < 0 ? reelNext() : reelPrev(); }
+});
+
+// === Main Video (Page 2) ===
+let mainVideoPlaying = false;
+function toggleMainVideo() {
+  const vid = document.getElementById('mainVideo');
+  const overlay = document.getElementById('playOverlay');
+  if (vid.paused) {
+    vid.play();
+    overlay.classList.add('hidden');
+    mainVideoPlaying = true;
+  } else {
+    vid.pause();
+    overlay.classList.remove('hidden');
+    mainVideoPlaying = false;
+  }
+}
+function toggleMute() {
+  const vid = document.getElementById('mainVideo');
+  const btn = document.getElementById('muteBtn');
+  vid.muted = !vid.muted;
+  btn.textContent = vid.muted ? '🔇' : '🔊';
+}
+
+// === Open Scroll ===
+function openScroll() {
+  const sc = document.getElementById('scrollContainer');
+  if (!sc.classList.contains('open')) {
+    sc.classList.add('open');
+    setTimeout(() => sc.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+  } else {
+    sc.classList.remove('open');
+  }
+}
+
+// === Slideshow (Page 2) ===
+let slideIdx = 0;
+const slides = document.querySelectorAll('.slide-item');
+const slideDotsEl = document.getElementById('slideDots');
+
+slides.forEach((_, i) => {
+  const d = document.createElement('button');
+  d.className = 'slide-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goSlide(i);
+  slideDotsEl.appendChild(d);
+});
+
+function goSlide(idx) {
+  slides[slideIdx].classList.remove('slide-active');
+  slideDotsEl.children[slideIdx].classList.remove('active');
+  slideIdx = (idx + slides.length) % slides.length;
+  slides[slideIdx].classList.add('slide-active');
+  slideDotsEl.children[slideIdx].classList.add('active');
+}
+function slideNext() { goSlide(slideIdx + 1); }
+function slidePrev() { goSlide(slideIdx - 1); }
+
+// Touch swipe for slideshow
+let ssTouchX = 0;
+const ssWrap = document.querySelector('.slideshow-wrap');
+if (ssWrap) {
+  ssWrap.addEventListener('touchstart', e => { ssTouchX = e.touches[0].clientX; });
+  ssWrap.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - ssTouchX;
+    if (Math.abs(dx) > 40) { dx < 0 ? slideNext() : slidePrev(); }
+  });
+}
+
+</script>
+</body>
+</html>
